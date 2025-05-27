@@ -12,7 +12,7 @@
 </head>
 <body>
   <h1>Ask Zed</h1>
-  <input id="question" type="text" placeholder="Hello. I'm Zed, your coach. Tell me, what do you think, feel or wish to say?" />
+  <input id="question" type="text" placeholder="Hello. I'm Zed, your coach. Tell me, what do you think, feel, or wish to say?" />
   <button onclick="askZed()">Ask</button>
   <div id="response"></div>
 
@@ -26,13 +26,11 @@
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": "Bearer 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"
+          "Authorization": "Bearer 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"
         },
         body: JSON.stringify({
           model: "gpt-3.5-turbo",
-          messages: [
-            { role: "system", content: "You are Zed, a helpful workplace advisor." },
-            { role: "user", content: question }
+          messages: [{ role: "user", content: question }]
           ]
         })
       });
