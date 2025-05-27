@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Ask Zed</title>
+  <title>Hello, I'm Zed, your personal leadership coach.</title>
   <style>
     body { font-family: sans-serif; padding: 2em; background: #f9f9f9; }
     h1 { margin-bottom: 1em; }
@@ -12,7 +12,7 @@
 </head>
 <body>
   <h1>Ask Zed</h1>
-  <input id="question" type="text" placeholder="Hello. I'm Zed, your coach. Tell me, what do you think, feel, or wish to say?" />
+  <input id="question" type="text" placeholder="So tell me, what do you think, feel, or wish to say?" />
   <button onclick="askZed()">Ask</button>
   <div id="response">No response.</div>
 
@@ -27,7 +27,7 @@
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "Authorization": "Bearer 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"
+            "Authorization": "Bearer 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"
           },
           body: JSON.stringify({
             model: "gpt-3.5-turbo",
