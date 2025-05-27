@@ -4,17 +4,59 @@
   <meta charset="UTF-8">
   <title>Ask Zed</title>
   <style>
-    body { font-family: sans-serif; padding: 2em; background: #f9f9f9; }
-    h1 { margin-bottom: 1em; }
-    #response { margin-top: 1em; white-space: pre-wrap; }
-    input, button { padding: 0.5em; font-size: 1em; width: 100%; margin-top: 1em; }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      padding: 2em;
+      max-width: 600px;
+      margin: auto;
+      color: #333;
+    }
+
+    h1 {
+      color: #202020;
+      margin-bottom: 1em;
+      text-align: center;
+    }
+
+    input, button {
+      padding: 1em;
+      font-size: 1em;
+      width: 100%;
+      margin-top: 1em;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    button {
+      background-color: #0055A4; /* Your brand blue (edit as needed) */
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #003e7e;
+    }
+
+    #response {
+      margin-top: 2em;
+      background: white;
+      padding: 1em;
+      border-radius: 5px;
+      min-height: 100px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+      white-space: pre-wrap;
+    }
   </style>
 </head>
 <body>
   <h1>Ask Zed</h1>
+
   <input id="question" type="text" placeholder="Hello. I'm Zed, your coach. Tell me, what do you think, feel, or wish to say?" />
   <button onclick="askZed()">Ask</button>
-  <div id="response"></div>
+
+  <div id="response">Waiting for your question...</div>
 
   <script>
     async function askZed() {
@@ -22,22 +64,25 @@
       const responseDiv = document.getElementById('response');
       responseDiv.textContent = "Thinking...";
 
-      const result = await fetch("https://api.openai.com/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": "Bearer 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"
-        },
-        body: JSON.stringify({
-          model: "gpt-3.5-turbo",
-          messages: [{ role: "user", content: question }]
-          ]
-        })
-      });
+      try {
+        const result = await fetch("https://api.openai.com/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer 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"
+          },
+          body: JSON.stringify({
+            model: "gpt-3.5-turbo",
+            messages: [{ role: "user", content: question }]
+          })
+        });
 
-      const data = await result.json();
-      const reply = data.choices?.[0]?.message?.content;
-      responseDiv.textContent = reply || "No response.";
+        const data = await result.json();
+        const reply = data.choices?.[0]?.message?.content;
+        responseDiv.textContent = reply || "No response.";
+      } catch (error) {
+        responseDiv.textContent = "Error: " + error.message;
+      }
     }
   </script>
 </body>
