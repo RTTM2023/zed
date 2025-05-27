@@ -1,17 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Hello, I'm Zed, your personal leadership coach.</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hello, I'm Zed</title>
   <style>
-    body { font-family: sans-serif; padding: 2em; background: #f9f9f9; }
-    h1 { margin-bottom: 1em; }
-    #response { margin-top: 1em; white-space: pre-wrap; }
-    input, button { padding: 0.5em; font-size: 1em; width: 100%; margin-top: 1em; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f9f9f9;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 40px;
+    }
+
+    h1 {
+      font-size: 2em;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      max-width: 600px;
+      padding: 12px;
+      font-size: 1em;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      margin-top: 15px;
+      padding: 12px 24px;
+      font-size: 1em;
+      background-color: #004c97;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0064c8;
+    }
+
+    #response {
+      margin-top: 30px;
+      max-width: 600px;
+      padding: 15px;
+      background: #fff;
+      border-radius: 6px;
+      border: 1px solid #ddd;
+      white-space: pre-wrap;
+    }
   </style>
 </head>
 <body>
-  <h1>Ask Zed</h1>
+  <h1>Hello, I'm Zed. Your personal leadership coach.</h1>
   <input id="question" type="text" placeholder="So tell me, what do you think, feel, or wish to say?" />
   <button onclick="askZed()">Ask</button>
   <div id="response">No response.</div>
@@ -27,7 +73,7 @@
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "Authorization": "Bearer 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"
+            "Authorization": "Bearer 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"
           },
           body: JSON.stringify({
             model: "gpt-3.5-turbo",
