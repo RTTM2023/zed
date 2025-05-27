@@ -4,59 +4,17 @@
   <meta charset="UTF-8">
   <title>Ask Zed</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f4f4f4;
-      padding: 2em;
-      max-width: 600px;
-      margin: auto;
-      color: #333;
-    }
-
-    h1 {
-      color: #202020;
-      margin-bottom: 1em;
-      text-align: center;
-    }
-
-    input, button {
-      padding: 1em;
-      font-size: 1em;
-      width: 100%;
-      margin-top: 1em;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-    }
-
-    button {
-      background-color: #0055A4; /* Your brand blue (edit as needed) */
-      color: white;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background-color: #003e7e;
-    }
-
-    #response {
-      margin-top: 2em;
-      background: white;
-      padding: 1em;
-      border-radius: 5px;
-      min-height: 100px;
-      box-shadow: 0 0 5px rgba(0,0,0,0.1);
-      white-space: pre-wrap;
-    }
+    body { font-family: sans-serif; padding: 2em; background: #f9f9f9; }
+    h1 { margin-bottom: 1em; }
+    #response { margin-top: 1em; white-space: pre-wrap; }
+    input, button { padding: 0.5em; font-size: 1em; width: 100%; margin-top: 1em; }
   </style>
 </head>
 <body>
   <h1>Ask Zed</h1>
-
   <input id="question" type="text" placeholder="Hello. I'm Zed, your coach. Tell me, what do you think, feel, or wish to say?" />
   <button onclick="askZed()">Ask</button>
-
-  <div id="response">Waiting for your question...</div>
+  <div id="response">No response.</div>
 
   <script>
     async function askZed() {
@@ -81,7 +39,8 @@
         const reply = data.choices?.[0]?.message?.content;
         responseDiv.textContent = reply || "No response.";
       } catch (error) {
-        responseDiv.textContent = "Error: " + error.message;
+        console.error("Error talking to Zed:", error);
+        responseDiv.textContent = "Something went wrong. Try again.";
       }
     }
   </script>
