@@ -5,57 +5,118 @@
   <title>Ask Zed</title>
   <style>
     body {
-      font-family: sans-serif;
+      font-family: 'Segoe UI', sans-serif;
       background-color: #f7faff;
-      padding: 2rem;
-      color: #333;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
     }
-    h1 {
-      font-size: 2em;
-      margin-bottom: 1rem;
+
+    header {
+      padding: 1.5rem;
+      background-color: #0052cc;
+      color: white;
+      font-size: 1.5rem;
+      text-align: center;
     }
-    input, button {
+
+    #chat-container {
+      flex: 1;
       padding: 1rem;
-      font-size: 1rem;
-      width: 100%;
-      margin-top: 1rem;
-      border: 1px solid #ccc;
-      border-radius: 8px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
     }
+
+    .message {
+      max-width: 70%;
+      padding: 0.75rem 1rem;
+      border-radius: 10px;
+      line-height: 1.4;
+    }
+
+    .user {
+      align-self: flex-end;
+      background-color: #d2e4ff;
+      color: #000;
+    }
+
+    .zed {
+      align-self: flex-start;
+      background-color: #eef3f7;
+      color: #000;
+    }
+
+    #input-area {
+      padding: 1rem;
+      border-top: 1px solid #ccc;
+      display: flex;
+      gap: 1rem;
+    }
+
+    input[type="text"] {
+      flex: 1;
+      padding: 0.75rem;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
+
     button {
       background-color: #0052cc;
       color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-size: 1rem;
       cursor: pointer;
-      transition: background 0.3s;
     }
+
     button:hover {
       background-color: #003d99;
-    }
-    #response {
-      margin-top: 2rem;
-      white-space: pre-wrap;
-      background: #eef3f7;
-      padding: 1rem;
-      border-radius: 8px;
-      min-height: 100px;
     }
   </style>
 </head>
 <body>
-  <h1>Hello, I'm Zed. Your personal leadership coach.</h1>
-  <input id="question" type="text" placeholder="So tell me, what do you think, feel, or wish to say?" />
-  <button onclick="askZed()">Ask</button>
-  <div id="response">No response.</div>
+  <header>Hello, I'm Zed. Your personal leadership coach.</header>
+
+  <div id="chat-container"></div>
+
+  <div id="input-area">
+    <input id="question" type="text" placeholder="So tell me, what do you think, feel, or wish to say?" onkeypress="handleKeyPress(event)">
+    <button onclick="askZed()">Ask</button>
+  </div>
 
   <script>
+    const chatContainer = document.getElementById("chat-container");
+    const inputField = document.getElementById("question");
+
+    const API_KEY = "sk-REPLACE_WITH_YOUR_API_KEY"; // replace with your real key locally
+
     const history = [
-      { role: "system", content: "You are Zed, a helpful, warm and engaging leadership coach. Respond clearly, structure your answers well, and keep your tone kind and thoughtful." }
+      {
+        role: "system",
+        content: "You are Zed, a helpful, warm and engaging leadership coach. Respond clearly, structure your answers well, and keep your tone kind and thoughtful."
+      }
     ];
 
+    function addMessage(text, role) {
+      const message = document.createElement("div");
+      message.className = `message ${role}`;
+      message.textContent = text;
+      chatContainer.appendChild(message);
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+
     async function askZed() {
-      const question = document.getElementById("question").value;
-      const responseDiv = document.getElementById("response");
-      responseDiv.textContent = "Thinking...";
+      const question = inputField.value.trim();
+      if (!question) return;
+
+      inputField.value = "";
+      addMessage(question, "user");
+      addMessage("Thinking...", "zed");
 
       history.push({ role: "user", content: question });
 
@@ -64,7 +125,7 @@
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "Authorization": "Bearer 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"
+            "Authorization": `Bearer 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`
           },
           body: JSON.stringify({
             model: "gpt-4o",
@@ -75,12 +136,22 @@
 
         const data = await result.json();
         const reply = data.choices?.[0]?.message?.content || "No response.";
-        responseDiv.textContent = reply;
-        history.push({ role: "assistant", content: reply });
 
+        // Remove "Thinking..." message
+        const thinking = chatContainer.querySelector(".zed:last-child");
+        if (thinking) thinking.remove();
+
+        addMessage(reply, "zed");
+        history.push({ role: "assistant", content: reply });
       } catch (error) {
-        console.error("Error:", error);
-        responseDiv.textContent = "Something went wrong. Try again.";
+        console.error("Zed error:", error);
+        addMessage("Something went wrong. Try again.", "zed");
+      }
+    }
+
+    function handleKeyPress(e) {
+      if (e.key === "Enter") {
+        askZed();
       }
     }
   </script>
