@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Ask Zed</title>
+  <style>
+    body { font-family: sans-serif; padding: 2em; background: #f9f9f9; }
+    h1 { margin-bottom: 1em; }
+    #response { margin-top: 1em; white-space: pre-wrap; }
+    input, button { padding: 0.5em; font-size: 1em; width: 100%; margin-top: 1em; }
+  </style>
+</head>
+<body>
+  <h1>Ask Zed</h1>
+  <input id="question" type="text" placeholder="Type your question here..." />
+  <button onclick="askZed()">Ask</button>
+  <div id="response"></div>
+
+  <script>
+    async function askZed() {
+      const question = document.getElementById('question').value;
+      const responseDiv = document.getElementById('response');
+      responseDiv.textContent = "Thinking...";
+
+      const result = await fetch("https://api.openai.com/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer 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"
+        },
+        body: JSON.stringify({
+          model: "gpt-3.5-turbo",
+          messages: [
+            { role: "system", content: "You are Zed, a helpful workplace advisor." },
+            { role: "user", content: question }
+          ]
+        })
+      });
+
+      const data = await result.json();
+      const reply = data.choices?.[0]?.message?.content;
+      responseDiv.textContent = reply || "No response.";
+    }
+  </script>
+</body>
+</html>
