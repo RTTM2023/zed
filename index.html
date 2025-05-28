@@ -4,99 +4,104 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Ask Zed</title>
-  <link href="https://fonts.googleapis.com/css2?family=Glacial+Indifference&family=Canva+Sans&display=swap" rel="stylesheet">
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600&display=swap');
+
     body {
       margin: 0;
       padding: 0;
-      font-family: 'Canva Sans', sans-serif;
-      background-image: url('image-from-rawpixel-id-5508754-jpeg.jpg');
+      height: 100vh;
+      background: url('https://rttm2023.github.io/zed/background.jpg') no-repeat center center fixed;
       background-size: cover;
-      background-position: center;
-      color: #000;
+      font-family: 'Outfit', sans-serif;
       display: flex;
       flex-direction: column;
-      justify-content: center;
       align-items: center;
-      height: 100vh;
-    }
-
-    h1 {
-      font-family: 'Glacial Indifference', sans-serif;
-      font-size: 2em;
-      padding: 1em 2em;
-      border: 3px solid white;
-      border-radius: 40px;
+      justify-content: center;
       color: white;
-      background: rgba(255, 255, 255, 0.05);
-      backdrop-filter: blur(6px);
-      margin-bottom: 3em;
-      text-align: center;
     }
 
-    .chat-box {
-      background: rgba(255, 255, 255, 0.4);
-      border-radius: 25px;
-      padding: 1em 1.5em;
+    .title {
+      font-size: 2rem;
+      font-weight: 400;
+      padding: 1rem 2rem;
+      border: 2px solid white;
+      border-radius: 50px;
+      margin-bottom: 3rem;
+      text-align: center;
+      backdrop-filter: blur(10px);
+    }
+
+    .chat-container {
       display: flex;
       align-items: center;
-      backdrop-filter: blur(8px);
-      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      background-color: rgba(255, 255, 255, 0.8);
+      padding: 1rem 1.5rem;
+      border-radius: 20px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+      max-width: 600px;
+      width: 90%;
     }
 
-    .chat-box input {
-      border: none;
-      background: transparent;
-      font-size: 1.2em;
+    input[type="text"] {
       flex: 1;
+      padding: 0.8rem 1rem;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-family: 'Outfit', sans-serif;
       outline: none;
+      background: transparent;
+      color: #333;
     }
 
-    .chat-box button {
+    button {
       background: none;
       border: none;
       cursor: pointer;
+      margin-left: 0.5rem;
     }
 
-    .chat-box button img {
-      width: 32px;
-      height: 32px;
+    button img {
+      width: 28px;
+      height: 28px;
     }
 
     #response {
-      margin-top: 2em;
-      background: rgba(255,255,255,0.5);
-      border-radius: 20px;
-      padding: 1em;
-      max-width: 90%;
-      font-size: 1em;
-      backdrop-filter: blur(4px);
+      margin-top: 2rem;
+      background: rgba(255, 255, 255, 0.85);
+      color: #222;
+      padding: 1rem 1.5rem;
+      border-radius: 12px;
+      max-width: 600px;
+      width: 90%;
+      font-size: 1rem;
+      white-space: pre-wrap;
+      font-family: 'Outfit', sans-serif;
     }
   </style>
 </head>
 <body>
-  <h1>Hi, I’m <em>Zed</em>, your personal learning coach.</h1>
+  <div class="title">Hi, I’m <strong>Zed</strong>, your personal learning coach.</div>
 
-  <div class="chat-box">
-    <input id="question" type="text" placeholder="So tell me, what do you think, or feel, or wish to say?" />
+  <div class="chat-container">
+    <input
+      id="question"
+      type="text"
+      placeholder="So tell me, what do you think, or feel, or wish to say?"
+    />
     <button onclick="askZed()">
-      <img src="https://img.icons8.com/ios-filled/50/paper-plane.png" alt="Send">
+      <img src="https://img.icons8.com/ios-filled/50/000000/filled-sent.png" alt="Send" />
     </button>
   </div>
 
-  <div id="response"></div>
+  <div id="response">No response yet.</div>
 
   <script>
-    let conversation = [
-      { role: "system", content: "You are Zed, a helpful, engaging assistant who gives clear, friendly and well-structured responses." }
-    ];
-
     async function askZed() {
-      const question = document.getElementById('question').value;
-      const responseDiv = document.getElementById('response');
+      const question = document.getElementById("question").value;
+      const responseDiv = document.getElementById("response");
       responseDiv.textContent = "Thinking...";
-
-      conversation.push({ role: "user", content: question });
 
       try {
         const result = await fetch("https://api.openai.com/v1/chat/completions", {
@@ -107,19 +112,31 @@
           },
           body: JSON.stringify({
             model: "gpt-4o",
-            messages: conversation
+            messages: [
+              {
+                role: "system",
+                content: "You are Zed, a friendly, thoughtful, and helpful learning coach who speaks with kindness and clarity. Respond in a conversational tone."
+              },
+              { role: "user", content: question }
+            ]
           })
         });
 
         const data = await result.json();
         const reply = data.choices?.[0]?.message?.content;
-        conversation.push({ role: "assistant", content: reply });
         responseDiv.textContent = reply || "No response.";
       } catch (error) {
-        console.error("Error talking to Zed:", error);
-        responseDiv.textContent = "Something went wrong. Try again.";
+        console.error("Error:", error);
+        responseDiv.textContent = "Oops, something went wrong.";
       }
     }
+
+    // Optional: allow Enter to submit
+    document.getElementById("question").addEventListener("keydown", function (e) {
+      if (e.key === "Enter") {
+        askZed();
+      }
+    });
   </script>
 </body>
 </html>
